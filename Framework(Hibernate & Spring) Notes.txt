@@ -1,0 +1,1545 @@
+EJB Entity BEAN:
+-------------
+
+> It's main  disadvantage is have to talk with EJB sission before communicating with EJB Entity.
+then it process the data. It means that EJB Entity Bean dependent on EJB session that is the
+main disadvantage.
+
+> Not only that but both ( EJB Entity Bean and EJB session Bean) are required application server
+	like Glash fish, Web Logic etc.. to run application.
+	
+> For small business purpose EJB is not recommended because it need to buy Application server to
+take care the application and it's maintaince cost is more.
+
+
+To overcome the problem of EJB Entity Bean and JDBC we use Hibernate
+
+
+What is Hibernate ?
+-------------------
+
+> Hibernate is a open source framework
+
+> It is used to implements db/ persistent logic
+
+> It is a ORM tools
+
+> It implements Java Persistent API (JPA)
+
+> It is not a replacement of JDBC
+
+
+
+Hibernate Features:---
+
+
+>Hibernate does not require special platform or server only jdk and jre  and jar files are enough
+to run the application
+
+> Hibernate specially design for DAO part
+
+> Hibernate provide cache and quaries functionality which makes the database independent
+
+> Hibernate is exception free means it does not throw any CTE only run time exception
+
+> Auto DDL support
+
+
+
+What is ORM ? What are the problem of ORM ?
+-------------------------------------------
+
+> It is a design pattern where we are going to write db/persistent logic 
+
+> It is used to map one particular class  within a Table
+
+> In the class, data members is map to columns of the table
+
+> ORM converts objects into SQL statements without chaining the values  and vice-versa
+
+
+Problem of ORM ?
+----------------
+
+> In ORM there are 5 problems:
+
+> 1. Problem of Relationship 
+> 2. Problem of Inheritance
+> 3. Problem of Grains
+> 4. Problem of Navigation
+> 5. Problem of Identity
+
+
+
+
+
+Note : To overcome the problem of ORM, JPA came into the picture
+
+What is JPA ?
+------------
+
+> JPA means Java Persistance Application Programming Interface
+
+> It is a standared solution for ORM problems. It is a API which provides standared rule to write db logic
+
+> JPA is introduced in JDK 1.6
+
+
+
+
+What is Entity class ? What are its states ?
+--------------------------------------------
+
+> Class which is mapped to table of the database.
+
+> and mapping is  happens at 2 level
+
+1. class to table
+
+2. Properties in the class to columns in the table
+
+eg. @Entity, @Table, @Id, @Column(name="same column name which is in table")
+
+
+State of Entity
+---------------
+>There are 3 states
+
+> Transient , Persistance and Detached
+
+
+Annotations to generate the automatic id of the rows
+-----------------------------------------------------
+
+@GenericGenerator(name="any name" strategy="increment")
+@GeneratorValue(generator="same as name attribute")
+
+
+
+What are the component of Hibernate ?
+-------------------------------------
+
+> There are 3 component of hibernate
+
+> 1. Configuration   2. SessionFactory  and 3. Session
+
+
+Configuration :
+--------------
+
+> This is a concrete class and present in org.hibernate.cfg.Configuration package
+
+> It is used to pass the hibernate configuration file i.e. hibernate.cfg.xml
+
+> It convert data from xml file into an object
+
+> Configuration file should be kept under src folder
+
+> The name should be hibernate.cfg.xml
+
+> Configure() method is used to pass the hibernate configuration file
+
+> Configuration Object help us to get SessionFactory object
+	
+	i.e org.hibernate.SessionFactory = org.hibernate.cfg.Configuration.buildSessionFactory();
+
+	
+	
+
+What is the differece between SessionFactory & Session ?
+--------------------------------------------------------	
+	
+	
+	
+2. SessionFactory
+-----------------
+
+> It is an interface and present in org.hibernate.SessionFactory package
+
+> It is a component of hibernate which establish the connection of database
+
+> It manages the connection object
+
+> SessionFactory is immutable
+
+> It is a thread safe
+
+> For an application there will be only one SessionFactory
+
+> and it is used to get Session component
+
+
+
+
+
+
+3. Session
+-----------
+
+> It is an interface and present in org.hibernate.Session package
+
+> It is a component of hibernate which is used to perform CRUD operation
+
+> It is mutable 
+
+> It is not a thread safe class
+
+> We can have multiple Session object for an application
+
+> Session is used to obtained the sub component like Transaction, Query etc.
+
+> We can get the Session object by using SessionFactory object
+	
+	i.e. org.hibernate.Session session = org.hibernate.SessionFactory.openSession();
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+NOTE: Storing of data in database is called as persistent
+
+
+
+> As the programmer i do not want to know sql quaries
+
+
+* How to store the object in database?
+--------------------------------------
+
+> by using the concept ORM
+
+>Class represent as a Table and in the table
+every row represent an object
+
+> So we need to establish the relationship between
+Object and Relational database 
+
+> and we can do with the help of ORM
+
+> ORM is a concept and we can implements with help of
+ORM tool
+
+
+
+
+There are some key points regarding one SessionFactory Object per application : -
+
+1.Single Data Store :
+-------------------
+ – It is single data store for your whole application. Although you can have multiple SessionFactory but each 
+ SessionFactory will have one different database associated with it.
+
+2.Thread Safe : 
+-------------
+– SessionFactory is thread safe so due to this feature many thread can access the SessionFactory.
+
+3.Immutable :
+------------- 
+- Once the SessionFactory's object is created you can not change or set the values of Session Facotyr. 
+Its internal state is set at the time of creation.
+
+4.Singleton :
+------------ 
+– SessionFactory is built at the time of application startup and it follows the singleton design pattern.
+
+
+
+
+Transaction: exchange of data
+
+* do everythig or do nothing
+
+
+
+* Hibernate follow sql transaction not jdbc
+
+*there is two methods:
+1. commit();
+2. transaction();
+
+
+*We can get the transaction components by using Session object
+
+
+---> It is a sub component of session.
+Transaction means do everything or nothing
+Transaction component can be obtained by using session
+
+Syntax:
+
+Transaction tx = session.beginTransaction();
+
+* Transaction has 2 methods:
+1. commit();
+2. rollback();
+
+* Transaction is reqired for insert, update and delete operation only.
+
+Note: if we need to execute inter related quaries i.e Transaction
+
+
+
+Save()
+------
+
+>Returns generated Id after saving. Its Serializable return type.
+
+> Saves the value to DB immediately and keeps track of the entity until the end of the session(I have tried to change the entity values outside of the transaction, it does not show any effect when session commits)
+> Does not save the changes to the db outside of the transaction.
+Assigns the generated id to the entity you are persisting
+Session.save() for a detached object will create a new row in the table.
+
+Persist()
+---------
+Does not returns generated Id after saving. Its void return type.
+Saves the value to DB immediately and keeps track of the entity until the end of the session.(I have tried to change the entity values outside of the transaction, it does not show any effect when session commits)
+Does not save the changes to the db outside of the transaction.
+Assigns the generated id to the entity you are persisting
+session.persist() for a detached object will throw PersistentObjectException as it is not allowed.
+
+
+
+Generic Generator:
+-----------------
+*Generators are database dependent 
+
+example for generators: increment, decrement, sequence, native, identity and assign
+
+Generators can be inbult and customize
+
+
+@GenericGenerator(name="Anything", strategy ="increment")
+@GeneratorValue((generator ="above Anthing")
+
+If you know how the quaries execute internally in console
+<property name = "show_sql>true</property>
+
+
+Fatching the object from database:
+---------DAO class----------
+public IplDTO getIPLTeam(int pk){
+
+sop("Fatching IPLTeam started");
+
+Configuration cfg = new Configuration();
+cfg.configure("db_config.xml");
+cfg.addAnnotatedClass(IplDTO.class);
+
+SessionFactory factory = cfg.buildSessionFactory();
+
+Session session = factory.openSession();
+IplDTO. dtoFromDB = session.get(IplDTO.class, pk);
+
+
+
+
+sop("Fatching IPLTeam ended");
+
+return dtoFromDB ;
+}
+
+
+----------------end of dao class--------------
+-----------main class-------------
+
+IplDTO dtoFromDB = dao.getIPLTeam(2);
+sop(dtoFromDB);
+
+
+
+
+
+
+Upadate the DB:
+--------------
+
+----------DAO class-----------
+public IplDTO updateTeam(String coachName, double budget){
+sop("Update method started...");
+
+Configuration cfg = new Configuration();
+cfg.configure("db_config.xml");
+cfg.addAnnotatedClass(IplDTO.class);
+
+SessionFactory factory = cfg.buildSessionFactory();
+
+Session session = factory.openSession();
+IplDTO dtoFromDB = session.get(IplDTO.class, pk);
+
+if(dtoFromDB!=null){
+
+dtoFromDB.setCoach(coachName);
+
+Transaction tx = session.biginTransaction();
+session.update(dtoFromDB);
+tx.commit();
+sop("Coach name is upadated successfully")
+ 
+
+}else{
+
+	sop("Given id is not present");
+
+} 
+
+
+
+
+sop("Update method ended...");
+
+
+
+}
+
+
+
+
+
+
+Note: servlet chaining
+
+
+SingleTon Factor:
+
+public class SingletonFactory{
+
+private static SessionFactor factory;
+
+static{
+	Cnfiguration cfg = new Configuration();
+	cfg.configure();
+	factory = cfg.buildSessionFactory();
+}
+
+public static SessionFactory getFactory(){
+return factory;
+}
+}
+
+
+----------------------------------------26/5/2018-------------------------------------------------
+
+
+Advantage of Hibernate:
+-----------------------
+
+1. Hibernate is loosely coupled with the database.
+
+2. Conversion of objects to statements and vice-versa is easier.
+
+3. We will get n number of connection objects.
+
+4. Handling exception is easier.
+
+5. Handling costly resources is easier.
+
+
+HQL(Hibernate Query Language):
+------------------------------
+
+
+1. HQL is way of writing customized quaries in hibernate
+
+	and the syntax of HQL resembles syntax of SQL.
+
+2. It is independent of database 
+
+3. HQL quaries can be process in 2 stages:
+	
+	i. prepareQuary
+	ii. processQuary
+	
+	
+	i. prepareQuary:
+	---------------
+	
+	Syntax: Query query = session.createQuery("HQL Query");
+	
+	
+	ii. Process Query:
+	-----------------
+	
+	In order process HQL quaries we have to follow some below methods:
+	
+	query.uniqueResult();
+	query.list();
+	query.executeUpdate();
+	
+	
+	Example of HQL Query:
+	--------------------
+	
+	1.(Select one row from the table)
+	
+	Case (SQL) : select * from student_table where sEmail ='raj@gmail.com';
+	
+	case (HQL) : 		"from StudentDTO where stEmail = '"+email+"' ";
+	
+	where email is a variable of DTO class
+	
+	
+	
+	2.(Select eveything from the table)
+	
+	Case (SQL) : select * from Employee_table ;
+	
+	case (HQL) : 		"from EmployeeDTO ";
+	
+	
+	
+	
+	
+	3.(Select 2 columns from the table)
+	
+	Case (SQL) : select s.name, s.percentage from Student_table s where s.email ='raj@gmail' ;
+	
+	case (HQL) :" select s.name, s.percentage from Student_DTO s where s.Email = '"+email+"' ";
+	
+	
+	4. 
+	
+	Case (SQL) : select s.name, s.percentage from Student_table s where s.dept ='cs' ;
+	
+	case (HQL) : "select s.name, s.percentage from Student_DTO s where s.dept = '"+deptName+"' ";
+	
+	
+	
+---------------------------------------27/5/2018-------------------------------------------------
+	
+	
+	Note: 1. Naming Convention of variable and class
+		2. sop
+		3.try-catch
+		
+		
+
+		"update StudentDTO st.Percentage = :pr"
+		
+		
+		
+		
+		pr is called as named parameter
+		
+		
+		
+		
+		
+Note: 
+
+HQL : is supported for select , update and delete functionality only not insert functionality
+		
+		
+		
+e.g.:
+-----		
+Hotel:
+
+No. of fields:
+
+1. id
+2. name
+3. address
+4. noOfRoom
+	
+		
+		
+		
+		
+Note:
+save(),delete(),update() and get()/load() method can be used only if if you know the primary key, to 
+overcome we use HQL	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+-----------------------------------------------CRITERIA---------------------------------------------------
+
+>It is an interface
+
+Q. Using criteria what can we do ?
+
+-> We can make Select operation using condition
+ e.g. -->
+ 
+ 1st max, 1st min, 
+ 
+ 
+ > Using criteria we make use of 'ONLY' Select Operation
+ 
+ 
+ 
+To Select All
+-------------
+
+Session s = sf.openSession();
+	Criteria c = s.criteria(Employee.class);
+	List<Employee> list = c.list();
+	for(Employee e : list){
+	
+	sop(e.getEmpId());
+	}
+	
+> if we pass Employee.class it will create
+an employee table and apply select operation on this table
+
+> This method internally generates a query
+	
+	select * from Employee
+	Note: if don't use any condition
+
+ 
+ It has some methods:
+ --------------------
+ 
+ 1. uniqueObject();
+ 
+ 2. list();
+ 
+ 3. more....
+ 
+ 
+ 
+ Restritions:
+ ------------
+ > It is a class
+ 
+ > Using Restritions we can apply condition
+ 
+ 
+ 
+ 
+> If we want to select only one record then
+ 
+select * from Employee where id = 1;
+
+To resolve above problem we have Restritions class
+: 
+
+1. Criterian cr =  Restritions.eq("id", 1);
+
+	c.add(cr);
+	Employee e = c.uniqueObject();
+	
+	So like this we can get only one object of employee
+	
+ 
+ 
+ 
+> If we want to select salary > 8000
+ 
+ 
+ 2.  Criterian cr =  Restritions.gt(salary, 8000);
+	c.add(cr);
+	//Employee e = c.uniqueObject();
+ // It's chance to return more than one object so
+ 
+		List<Employee> list = c.list();
+ 
+		for(Employee e : list){
+	
+	sop(e.getEmpId());
+	}
+ 
+ 
+> if we want only particular columns the table OR
+ and you want to calculate aggregate function like
+ avg(salary), count(*), sum(sal), min(sal), max(sal)
+ 
+ To resolve above problem we have Projection API:
+ 
+ Projection:
+ -----------
+ 
+ Suppose we have requirement like
+ select Ename from Employee
+ 
+ Projection p1 =  projection.property("name");
+	c.setProjection(p1);
+	List<String> names = c.list();
+	for(String name : names){
+	
+		sop(name);
+	}
+	
+if we want one more Projection then then again need to create Projection
+
+Projection p2 = projection.property("email");
+
+c.setProjection(p2); --> this line override the previous projection and return new projection
+	
+	
+ Note: Using projection we can get partial records	
+ 
+Note: 
+
+>For one Criteria, we can add multiple 'RESTRICATION' at a time But
+
+> For one Projection, we can add 'ONLY' one single projection
+ 
+ 
+
+ 
+ * If we want to add multiple projection the we have class by name ProjectionList 
+ 
+ projectionList pList = projection.projectionList();
+ 
+	pList.add(p1);
+	pList.add(p2);
+	.............
+	.............
+	c.setProjection(pList);
+	
+	List<Object [] ) objArr = c.list();
+ 
+
+ > If we want to use aggregate function then in Projection class have methods:
+ 
+ For Average Salary
+ -------------------
+ 1. Projection p =  projection.avg("salary");
+ c.setProjection(p);
+ double avgSal = (double)c.uniqueObject();
+ 
+ 
+ For Maximum id
+ ------------------
+ 
+ 2. Projection p = projection.max("id")
+ 
+	c.setProjection(p);
+ int avgSal = (Integer)c.uniqueObject();
+ 
+ 
+ Summary: 
+ 
+ > Restritions are for conditions(=,<,>,Like,Between,..)
+ 
+ > 	i. Projection are for aggregate function and
+	ii. particular column select operation
+
+ > So Projection and Restritions used fro Criteria
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+--------------------------------2/06/2018---Problem of Relationship---------------------------------------
+
+
+
+> Refering one class in another class is called as problem of relationship in ORM.
+
+> Relationship is nothing but Has-a Relationship.
+
+> Relationship can be of 4 types
+
+i. one to one
+-------------
+
+Annotations:
+
+
+@OnetoOne 
+> this is the annotation provided by JPA to handle one to one relationship
+
+@PrimaryKeyJoinColumn 
+> It is used to fatch the primary key of the associated class
+
+> It should used on onim class reference
+
+@JoinColumn(name="associated class primary id coachName") --> 
+this annotation is used to map foreign key into the associated table/class
+this annotation should be used on onim class
+
+
+ii. one to many
+---------------
+
+>One class has reference of many  similar class is called one to many relationship.
+
+> JPA provides @OnetoMany to implements this scenario
+
+class Game
+{
+
+
+
+}
+
+class Player{
+
+
+}
+
+@OnetoMany
+@JoinColumn(name="player_id")
+List<Player> playerList;
+
+
+Steps to implements one to many
+
+1. create DTO classes(onim and associated)
+2. create DAO class 
+3. create Tester class 
+4. Create objects of Entities
+
+Add associated entities in  List
+5.Create object of onim entity and pass list of associated entities to onim entity
+
+6. Called save() method
+
+
+iii. many to one
+----------------
+
+> cascade is used to define what operation need to perform on associated table
+
+> merge is used to update the table
+
+> detach is used to perform disconnect the connection between the tables
+
+> perist is used to insert the data into corresponding table
+
+
+@ManyToOne(cascade = CascadeType.All)
+@JoinColumn(name="game_id")
+GameDto gameDto;
+
+Note:
+----
+> if we want to insert the entities in both the table then use cascade else don't
+
+Create PlayerDao class and  write save method
+PlayerDto p5 = new PlayerDto
+p5.setName("Saina Nehwal");
+p5.setGender("F");
+p5.setAge(34);
+
+GameDto game = new 
+
+iv. many to many
+
+
+
+
+
+
+
+*ORM has a problem in relationship
+ 
+*JPA provide hte solution for ORM.
+
+
+
+class Faculty(Onim){
+
+List<Student> list
+
+}
+
+class Student(Associated){
+
+}
+
+Person and Passport
+
+
+
+
+
+Based on problem of relationship hibernate categories the relationship in 4 category:
+
+1. one to one
+
+class Person
+{
+
+
+String name;
+String email;
+ling phNumber;
+int age;
+
+@OneToOne
+@PrimaryKeyJoinColumn
+Passport pass
+
+}
+
+class Passport
+{
+
+int pId;
+String ppNum;
+int validity;
+String candiateName;
+
+@OneToOne
+@JoinColumn
+
+Person person;
+
+}
+
+ configure()-->pass the class to xml file and create the table for that class
+where 
+
+@JoinColumn : catch the primary of the class and thro to the onim class
+
+
+Note: what happens if you miss the @Column and @Table
+
+	
+	
+	
+Note: 
+1.In jdbc SQL need to fatch data from database
+
+2. In hibernate get(Class, pk) method is used to fatch data from database
+
+3. HQL
+
+4. Criteria
+
+* Session object to perform CRUD operation.
+
+
+
+
+Note:
+
+* In SQL,
+
+select * from student_table where email='Rajesh@gmail.com';
+
+where student_table is a table and name is column
+
+
+* In HQL,
+
+select * from studentDTO where sEmail = "Rajesh@gmail.com"
+
+where studentDTO is class and sEmail is property
+
+
+* hibernate convert HQL to SQL quaries
+
+
+How to create table automatically in Hibernate ?
+
+
+
+
+
+
+State of Java Object:
+--------------------
+
+
+1. Object creation
+2. Inialization and utilization
+3. Destruction phase
+
+
+
+Complete object
+
+Incomplete object
+
+
+
+
+
+State of Entity:
+----------------
+
+1. Presistence(new object with primary key)
+
+2. Transient(new object without primary key)
+
+3. Detached ( current
+
+	
+	
+	
+	
+	
+	
+	
+-----------------------------------Spring-----------------------10/06/2018--------------------------------------
+
+ApplicationContext take care of bean class
+
+xml files
+----------
+
+<bean id="m1" class="com.jspiders.beanDemo.bean.Mobile"/>
+<bean id="m2" class="com.jspiders.beanDemo.bean.Mobile"/>
+
+id act as reference variable of corresponding class
+	
+Tester.java
+-----------
+
+ApplicationContext container = new ClassPathXmlApplicationContext("spring_config.xml");
+Mobile mobile = container.getBean("m1",Mobile.class);
+mobile.switchOn();
+mobile.makeCall();
+mobile.switchOff();	
+
+Mobile mobile1 = container.getBean("m1",Mobile.class);
+mobile1.switchOn();
+mobile1.makeCall();
+mobile1.switchOff();	
+
+
+Note:
+pass the xml file to ApplicationContext which is known as Spring Container
+	
+	
+	
+Containers:
+----------
+
+Container manages life cycle of objects	:
+
+e.g. Servlet Container, EJB container, Spring Container(ApplicationContext(I),..more)
+
+In Spring , Spring Container manages life cycle of spring bean object
+
+Hirarchy of Spring Containers:
+------------------------------
+BeanFactory(I) <--- ApplicationContext(I)  <--- WebApplication(I)
+
+Q.  What is differece between ApplicationContext and BeanFactory ?
+	
+> 	BeanFactory is used to develop Standalone application
+
+	ApplicationContext is used to develop Web Application .
+	
+> 	Functional requirement only
+	Functional + non Functional both
+	
+Note: Functional code vs Non Functional code requirement
+
+
+ApplicationContext: 
+------------------
+
+> It is an spring container
+> It is a type of BeanFactory
+> It is suitable for  web Application
+> It supports aspect oriented programming(AOB)
+
+example of non Functional requirement: International loggers(I18N), security
+ > it is also called aspect
+ 
+ Instantiation and Intialization of ApplicationContext
+ ------------------------------------------------------
+ 
+ApplicationContext container = new ClassPathXmlApplicationContext("spring_config.xml"); 
+
+In spring xml file
+------------------
+	
+<bean id="m1" class="fullyQualifiedClassName"/>
+
+
+Getting Bean object from Spring container:
+-----------------------------------------
+container.getBean("m1", Mobile.class);
+	
+	
+	
+Overloaded Constructor:
+----------------------
+
+It is used predefined functionality
+
+
+
+Bean Inialization:
+-----------------	
+
+> WE can intialize the properties of Bean in 2 ways: 
+> 1.Userdefined Constructor 2. Via Setter methods
+
+Constructor ways of initializtion:
+---------------------------------
+
+In this approach spring provides tag : <constructor-arg> tag to initialize properties of bean class
+> It should be sub tag of <bean> tag
+> No. of <constructor-arg> tag lookes for appropriate overloaded constructor
+
+
+Initialize parameters using index:
+---------------------------------
+<constructor-arg value="KSG" index="1"></constructor-arg>
+<constructor-arg value="Mr. HD" index="2"></constructor-arg>
+<constructor-arg value="30" index="3"></constructor-arg>
+
+
+
+
+Setter Way  of intializing the variables of bean class:
+-------------------------------------------------------
+
+> Spring provides <property> tag to initialize the Bean properties
+
+> <proerty> tag looks for setter method in bean class
+
+> <property> tag sub or child tag  of <bean> tag
+
+> <property> tag has 2 attributes name and value 
+
+where name specify property of bean class and value attribute, we need pass the value for that property
+e.g. :  
+
+<constructor-arg value="Mr.Modi" index="1"></constructor-arg>
+<constructor-arg value="Govt of India" index="0"></constructor-arg>
+<constructor-arg value="30" index="2"></constructor-arg>
+<property name="type" value="Central"/> 
+<property name="budget" value="50000000000000"/> 
+
+Note: Just above one look for overloaded constructor
+
+
+Note:
+
+There are 4 ways to intialize the variables:
+--------------------------------------------
+> Inializing @ of declaration( properties present in every object )
+> using Constructor
+> Getter & setter
+> Block ( properties present in every object )
+	
+	
+	
+	
+	
+** Spring IOC(Inversion Of Control):
+-----------------------------------
+
+Note: JVM will create the object in java but in case of spring, Spring container create object and manages the object
+
+> It is a design pattern in spring framework.
+
+> IOC means Inverting the control to external entity which create and manages Bean object in spring
+
+> Container is the external entity which create and manages Bean Object
+
+ApplicationContext ctx = ClassPathXmlApplicationContext("Spring_Config.xml");
+Mobile mobile = ctx.getBean(mobile.class);
+
+
+
+Scope of Spring Bean:
+--------------------
+There are 5 scopes:
+
+1.Singleton:
+
+> This is the default scope of Spring Bean object
+
+> It creates only one object per class
+
+e.g.:
+
+Mobilecreated
+com.firstprogram.Bean.Mobile@457e2f02
+com.firstprogram.Bean.Mobile@457e2f02
+com.firstprogram.Bean.Mobile@457e2f02
+com.firstprogram.Bean.Mobile@457e2f02
+
+
+2. Prototype:
+
+> It allows to create multiple objects for the same class
+
+e.g.:
+
+Mobilecreated
+com.firstprogram.Bean.Mobile@51565ec2
+Mobilecreated-
+com.firstprogram.Bean.Mobile@482f8f11
+Mobilecreated
+com.firstprogram.Bean.Mobile@1593948d
+Mobilecreated
+com.firstprogram.Bean.Mobile@1b604f19
+
+3. Request Scope
+
+4.Session Scope
+
+> Both are used for web application
+
+5.Global Scope
+
+> this is used for portlet applications
+(  which is used to integrete two different application like flipkart & NetBanking)
+
+-------------------------------------15/06/2018----------------------------------------------------------
+Recape
+Note: Introduction, Container, Spring Container_ ApplicationContext, Bean Internation(Constructor way, Setter way)
+		, IOC, Scope)
+		
+		
+
+Dependency Injection:
+---------------------
+
+> It is a design principle in spring framework
+
+> Initializing the non primitive types of bean class can be done via dependency injection
+
+> Spring Container will create objects and perform dependency injection at run time
+
+> Dependency Injection can be achiev via 2 ways:
+
+> Constructor way of dependency injection and setter way of dependency injection
+
+Constructor way of dependency injection:
+---------------------------------------
+
+e.g.
+----
+In this approach <constructor-arg> tag will have ref attribute which takes the reference of dependent object
+
+bean id="u1" class="com.jspiders.university.bean.University.University()">
+
+	<constructor-arg value="Visveswaraya" index=""></constructor-arg>
+	<constructor-arg value="deemed" index=""></constructor-arg>
+	<constructor-arg ref="add" index=""></constructor-arg>
+	
+
+</bean>
+<bean id="add" class="com.jspiders.university.bean.Address">
+
+	<constructor-arg value="JaanaSangama" index=""></constructor-arg>
+	<constructor-arg value="Belgam" index=""></constructor-arg>
+	<constructor-arg value="12356"></constructor-arg>
+	<constructor-arg value="Karnataka"></constructor-arg>
+
+</bean> 
+	
+
+
+
+Setter way of dependency injection
+----------------------------------
+
+> In this approach dependent objects intialize via setter methods
+
+> Spring provide "ref" attribute inside <property> tag which will point to reference of dependent object
+
+e.g.
+
+<bean id="u1" class="com.jspiders.university.bean.University">
+
+	<property name="numOfCol" value="200"></property>
+	<property name="universityAdd" ref="add"></property>
+	
+
+</bean>
+
+
+What is the application of Spring ?
+-----------------------------------
+
+Since in Servlet, we need to create N number of servlet for N number of task but in Spring we can perform N 
+number of task in single class using IOC and dependency injection
+
+
+
+
+
+
+
+
+
+
+
+
+
+In Servlet we created irrespective of object to perform simple task like save to overcome we use IOC and dependency
+injection.
+
+
+
+
+
+
+
+
+
+
+Spring-Java Configuration/Spring JC
+-----------------------------------
+-----------------------------------
+
+> this is Annotations way of implementing spring IOC 
+
+> @Component is the annotation is used to create object of a bean class
+  ----------
+
+> In xml file we need to use following tag which specify where bean class are created
+
+<context component-scan base-package="com.jspiders.movieapp.bean"/>
+						------------
+
+where com.jspiders.movieapp.bean is  package name 
+
+Note : 
+> base-package should contain package name only 
+
+> Remember it should not be FQC ( fullyQualifiedClassName)
+
+
+
+
+Initializing the value for properties using Annotations:
+--------------------------------------------------------
+
+Spring Framework provide  @Value to initialize the bean properties
+
+@Value should be used above the corresponding property
+	
+e.g.
+
+In bean class,
+
+	@Value("Race3")
+	public String mName;
+	@Value("140")
+	public int mDuration;
+	@Value("50000000000000")
+	public double budget;
+	
+	
+In xml file,
+
+<context component-scan base-package="com.jspiders.movieapp.bean"/>
+
+
+Note: This is not a best approach to initialize the variable	
+
+
+
+
+
+Dependency injection using Annotations:
+---------------------------------------
+
+
+> @Autowired this is the annotation provided by the spring to perform dependency injection
+
+> @Autowired can be used above the non-premitive fields and also in the constructor
+
+
+@Autowired
+public Movie(@Value("Kalla") String name, Actor actor)
+{
+
+this.name  = name;
+this.actor = actor;
+
+
+}
+
+
+--------------------------------------17/06/2018-------------------------------------------------------------------
+
+
+
+
+Note:  
+
+> Entry point means from where program start the execution
+
+> Entry point web.xml in web project
+	
+> Entry point main method in stanndalone project
+
+
+
+									Spring MVC Architecture
+									------------------------
+
+Server --> JEE Component ---> web.xml --> DispatcherServlet
+
+
+Steps to create Spring MVC web project:
+--------------------------------------
+1. Create Dynamic Web project
+
+2. Generate web.xml
+
+3. add all jars in lib folder
+
+4. copy spring config file to WEB-INF folder
+
+5. Create standared package under src folder
+
+6. and then create controller folder under package
+
+7. create login.jsp,landing.jsp under WebContent
+
+8. create LoginController class under controller folder
+
+9. configure web.xml file
+
+10.configure spring-config.xml file
+
+
+
+
+
+Spring MVC Architecture describes how the request is process in spring framework
+
+> It has 4 components
+
+1. DispatcherServlet  2. Handler Mapping	3. Controller	 4.View Resolver
+
+
+
+
+1. DispatcherServlet:
+--------------------
+
+> It is an entry and exit point for
+
+> It is a only servlet in spring framework
+
+> It implements FCDP(front Controller )
+
+> DispatcherServlet life cycle manages by servlet container
+
+> DispatcherServlet is instantiated and initialize by servlet container
+
+> DispatcherServlet  a has data member contextConfigLocation which takes location of spring configuration xml file
+
+
+
+
+
+2. Handler Mapping
+------------------
+
+> It a map used to resolve url with controller class
+
+> Handler Mapping mapps the incomming request to the appropriate controller based on url pattern and values present
+in annotation mapping
+
+> It gives controller name or 404 as response to DispatcherServlet
+
+
+
+3. Controller
+-------------
+
+> In this component client request will be processed
+
+> DispatcherServlet forward the request to the controller unit based on the controller name provided by handler mapping
+
+> After processing the request controller return view name to DispatcherServlet
+
+
+
+4.View Resolver
+---------------
+
+>This is the component which manages all the view pages in the application
+
+> It takes the view name from DispatcherServlet and returns view(page) or 404 
+
+example for view Resolver:
+
+InternalResourceViewResolver & UrlBasedViewResolver are the inbuilt classes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
